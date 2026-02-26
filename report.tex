@@ -1,0 +1,425 @@
+% Options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  letterpaper,
+  DIV=11,
+  numbers=noendperiod]{scrartcl}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{5}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+% Make \paragraph and \subparagraph free-standing
+\makeatletter
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+\makeatother
+
+
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+
+
+
+
+
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+ 
+
+
+\KOMAoption{captions}{tableheading}
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={WDI Indicators (2022) --- Exploratory Analysis},
+  pdfauthor={Lucas Huang},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+
+\title{WDI Indicators (2022) --- Exploratory Analysis}
+\author{Lucas Huang}
+\date{2026-02-26}
+\begin{document}
+\maketitle
+
+\renewcommand*\contentsname{Table of contents}
+{
+\hypersetup{linkcolor=}
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+
+\section{Overview}\label{overview}
+
+This report explores a subset of World Development Indicators (WDI)
+across countries in 2022.\\
+We focus on the relationships among economic development (GDP per
+capita), health outcomes (life expectancy), and other social indicators
+such as unemployment, inflation, and inequality.
+
+\section{Load data}\label{load-data}
+
+\begin{longtable}[]{@{}lllllllllllllll@{}}
+\toprule\noalign{}
+& country & inflation\_rate & exports\_gdp\_share & gdp\_growth\_rate &
+gdp\_per\_capita & adult\_literacy\_rate &
+primary\_school\_enrolment\_rate & education\_expenditure\_gdp\_share &
+measles\_immunisation\_rate & health\_expenditure\_gdp\_share &
+income\_inequality & unemployment\_rate & life\_expectancy &
+total\_population \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 & Afghanistan & 13.712102 & 18.380042 & -6.240172 & 357.261153 & NaN &
+NaN & NaN & 56.0 & 23.088169 & NaN & 14.100 & 65.617 & 40578842.0 \\
+1 & Albania & 6.725203 & 37.197076 & 4.826801 & 7756.961887 & NaN &
+96.371230 & 2.729770 & 86.0 & 7.536462 & NaN & 10.785 & 78.769 &
+2451636.0 \\
+2 & Algeria & 9.265516 & 30.791556 & 3.600000 & 4960.303343 & NaN &
+105.747154 & 4.749247 & 79.0 & 3.634643 & NaN & 12.382 & 76.129 &
+45477389.0 \\
+3 & American Samoa & NaN & 46.957520 & 1.735016 & 18017.458938 & NaN &
+NaN & NaN & NaN & NaN & NaN & NaN & 72.752 & 48342.0 \\
+4 & Andorra & NaN & NaN & 9.564612 & 42414.047986 & NaN & 90.465681 &
+2.647280 & 98.0 & 7.521358 & NaN & NaN & 84.016 & 79705.0 \\
+\end{longtable}
+
+\section{Data quality checks}\label{data-quality-checks}
+
+We first check the dataset size, column types, and missingness.
+
+\begin{verbatim}
+(217, 14)
+\end{verbatim}
+
+\begin{verbatim}
+country                                str
+inflation_rate                     float64
+exports_gdp_share                  float64
+gdp_growth_rate                    float64
+gdp_per_capita                     float64
+adult_literacy_rate                float64
+primary_school_enrolment_rate      float64
+education_expenditure_gdp_share    float64
+measles_immunisation_rate          float64
+health_expenditure_gdp_share       float64
+income_inequality                  float64
+unemployment_rate                  float64
+life_expectancy                    float64
+total_population                   float64
+dtype: object
+\end{verbatim}
+
+\begin{verbatim}
+adult_literacy_rate                0.792627
+income_inequality                  0.682028
+primary_school_enrolment_rate      0.253456
+education_expenditure_gdp_share    0.248848
+inflation_rate                     0.179724
+exports_gdp_share                  0.161290
+unemployment_rate                  0.142857
+health_expenditure_gdp_share       0.115207
+measles_immunisation_rate          0.110599
+gdp_growth_rate                    0.036866
+gdp_per_capita                     0.036866
+country                            0.000000
+life_expectancy                    0.000000
+total_population                   0.000000
+dtype: float64
+\end{verbatim}
+
+\section{Exploratory data analysis (3+
+indicators)}\label{exploratory-data-analysis-3-indicators}
+
+In this section, we summarize key indicators and inspect distributions.
+
+\subsection{Summary statistics}\label{summary-statistics}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+& life\_expectancy & gdp\_per\_capita & total\_population &
+unemployment\_rate & inflation\_rate & income\_inequality \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+count & 217.000000 & 209.000000 & 2.170000e+02 & 186.000000 & 178.000000
+& 69.000000 \\
+mean & 73.108020 & 21142.747417 & 3.671133e+07 & 7.196930 & 12.645329 &
+35.201449 \\
+std & 7.942539 & 31040.300784 & 1.415279e+08 & 5.845956 & 19.752353 &
+6.883986 \\
+min & 18.818000 & 302.992505 & 9.992000e+03 & 0.130000 & -6.687321 &
+24.100000 \\
+25\% & 67.788000 & 2899.160475 & 8.216370e+05 & 3.484750 & 5.361652 &
+30.900000 \\
+50\% & 74.160976 & 7655.594210 & 6.664449e+06 & 5.337000 & 7.985187 &
+33.900000 \\
+75\% & 78.531000 & 28360.304147 & 2.601872e+07 & 9.194500 & 12.259876 &
+38.800000 \\
+max & 85.746000 & 226052.001905 & 1.425423e+09 & 36.472000 & 171.205491
+& 54.800000 \\
+\end{longtable}
+
+\subsection{Correlations (numeric
+indicators)}\label{correlations-numeric-indicators}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+& life\_expectancy & gdp\_per\_capita & total\_population &
+unemployment\_rate & inflation\_rate & income\_inequality \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+life\_expectancy & 1.000000 & 0.570982 & -0.005244 & -0.115117 &
+-0.056786 & -0.249699 \\
+gdp\_per\_capita & 0.570982 & 1.000000 & -0.070115 & -0.200769 &
+-0.163516 & -0.263553 \\
+total\_population & -0.005244 & -0.070115 & 1.000000 & -0.081104 &
+-0.027161 & -0.045055 \\
+unemployment\_rate & -0.115117 & -0.200769 & -0.081104 & 1.000000 &
+0.059381 & 0.154770 \\
+inflation\_rate & -0.056786 & -0.163516 & -0.027161 & 0.059381 &
+1.000000 & 0.068290 \\
+income\_inequality & -0.249699 & -0.263553 & -0.045055 & 0.154770 &
+0.068290 & 1.000000 \\
+\end{longtable}
+
+\section{Relationship between life expectancy and GDP per
+capita}\label{relationship-between-life-expectancy-and-gdp-per-capita}
+
+We expect countries with higher GDP per capita to generally have higher
+life expectancy, though the relationship may flatten at high income
+levels.
+
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-pdf/fig-life-gdp-output-1.pdf}}
+
+}
+
+\caption{\label{fig-life-gdp}Life expectancy vs GDP per capita (log
+scale).}
+
+\end{figure}%
+
+As shown in Figure~\ref{fig-life-gdp}, life expectancy tends to increase
+as GDP per capita increases.
+
+\section{Inequality and life
+expectancy}\label{inequality-and-life-expectancy}
+
+Next we examine whether countries with higher income inequality tend to
+have lower life expectancy.
+
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-pdf/fig-ineq-life-output-1.pdf}}
+
+}
+
+\caption{\label{fig-ineq-life}Life expectancy vs income inequality.}
+
+\end{figure}%
+
+Figure Figure~\ref{fig-ineq-life} suggests that there isn't a
+significant association between life expectancy and income inequality.
+It may be slightly negative but more tests are needed and may not be
+significant.
+
+\section{Top countries by life
+expectancy}\label{top-countries-by-life-expectancy}
+
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/figure-pdf/fig-top-life-output-1.pdf}}
+
+}
+
+\caption{\label{fig-top-life}Top 15 countries by life expectancy.}
+
+\end{figure}%
+
+Figure Figure~\ref{fig-top-life} highlights the highest life expectancy
+values in the dataset. The top 15 are all above 80 and with countries
+distributed from Asia, Europe, Oceania, and small island nations.
+
+\section{Summary table}\label{summary-table}
+
+We summarize central tendencies and ranges for selected indicators.
+
+\begin{longtable}[]{@{}llllll@{}}
+
+\caption{\label{tbl-summary}Summary statistics for selected indicators.}
+
+\tabularnewline
+
+\toprule\noalign{}
+& count & mean & median & min & max \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+life\_expectancy & 217.0 & 7.310802e+01 & 7.416098e+01 & 18.818000 &
+8.574600e+01 \\
+gdp\_per\_capita & 209.0 & 2.114275e+04 & 7.655594e+03 & 302.992505 &
+2.260520e+05 \\
+total\_population & 217.0 & 3.671133e+07 & 6.664449e+06 & 9992.000000 &
+1.425423e+09 \\
+unemployment\_rate & 186.0 & 7.196930e+00 & 5.337000e+00 & 0.130000 &
+3.647200e+01 \\
+inflation\_rate & 178.0 & 1.264533e+01 & 7.985187e+00 & -6.687321 &
+1.712055e+02 \\
+income\_inequality & 69.0 & 3.520145e+01 & 3.390000e+01 & 24.100000 &
+5.480000e+01 \\
+
+\end{longtable}
+
+See Table~\ref{tbl-summary} for the key statistics.
+
+\section{Conclusion}\label{conclusion}
+
+In 2022, GDP per capita is positively associated with life expectancy
+(Figure~\ref{fig-life-gdp}).\\
+Other indicators such as inequality and unemployment may also relate to
+health outcomes, although the strength and direction of these
+relationships vary across countries.
+
+
+
+
+\end{document}

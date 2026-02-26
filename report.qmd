@@ -1,0 +1,151 @@
+---
+title: "WDI Indicators (2022) — Exploratory Analysis"
+author: "Lucas Huang"
+date: "2026-02-26"
+format:
+  html:
+    toc: true
+    number-sections: true
+  pdf:
+    toc: true
+    number-sections: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+## Overview
+
+This report explores a subset of World Development Indicators (WDI) across countries in 2022.  
+We focus on the relationships among economic development (GDP per capita), health outcomes (life expectancy), and other social indicators such as unemployment, inflation, and inequality.
+
+## Load data
+
+```{python}
+import pandas as pd
+
+df = pd.read_csv("wdi.csv")
+df.head()
+```
+
+## Data quality checks
+
+We first check the dataset size, column types, and missingness.
+
+```{python}
+df.shape
+```
+
+```{python}
+df.dtypes
+```
+
+```{python}
+missing = df.isna().mean().sort_values(ascending=False)
+missing
+```
+
+## Exploratory data analysis (3+ indicators)
+
+In this section, we summarize key indicators and inspect distributions.
+
+### Summary statistics
+
+```{python}
+eda_cols = [
+    "life_expectancy",
+    "gdp_per_capita",
+    "total_population",
+    "unemployment_rate",
+    "inflation_rate",
+    "income_inequality"
+]
+
+df[eda_cols].describe()
+```
+
+### Correlations (numeric indicators)
+
+```{python}
+corr = df[eda_cols].corr(numeric_only=True)
+corr
+```
+
+## Relationship between life expectancy and GDP per capita
+
+We expect countries with higher GDP per capita to generally have higher life expectancy, though the relationship may flatten at high income levels.
+
+```{python}
+#| label: fig-life-gdp
+#| fig-cap: "Life expectancy vs GDP per capita (log scale)."
+import matplotlib.pyplot as plt
+
+plot_df = df.dropna(subset=["life_expectancy", "gdp_per_capita"])
+
+plt.figure()
+plt.scatter(plot_df["gdp_per_capita"], plot_df["life_expectancy"])
+plt.xscale("log")
+plt.xlabel("GDP per capita (log scale)")
+plt.ylabel("Life expectancy (years)")
+plt.title("Life expectancy vs GDP per capita")
+plt.show()
+```
+
+As shown in @fig-life-gdp, life expectancy tends to increase as GDP per capita increases.
+
+## Inequality and life expectancy
+
+Next we examine whether countries with higher income inequality tend to have lower life expectancy.
+
+```{python}
+#| label: fig-ineq-life
+#| fig-cap: "Life expectancy vs income inequality."
+ineq_df = df.dropna(subset=["life_expectancy", "income_inequality"])
+
+plt.figure()
+plt.scatter(ineq_df["income_inequality"], ineq_df["life_expectancy"])
+plt.xlabel("Income inequality")
+plt.ylabel("Life expectancy (years)")
+plt.title("Life expectancy vs income inequality")
+plt.show()
+```
+
+Figure @fig-ineq-life suggests that there isn't a significant association between life expectancy and income inequality. It may be slightly negative but more tests are needed and may not be significant. 
+
+## Top countries by life expectancy
+
+```{python}
+#| label: fig-top-life
+#| fig-cap: "Top 15 countries by life expectancy."
+top = df.dropna(subset=["life_expectancy"]).sort_values("life_expectancy", ascending=False).head(15)
+
+plt.figure()
+plt.barh(top["country"], top["life_expectancy"])
+plt.xlabel("Life expectancy (years)")
+plt.title("Top 15 countries by life expectancy")
+plt.gca().invert_yaxis()
+plt.show()
+```
+
+Figure @fig-top-life highlights the highest life expectancy values in the dataset. The top 15 are all above 80 and with countries distributed from Asia, Europe, Oceania, and small island nations. 
+
+## Summary table
+
+We summarize central tendencies and ranges for selected indicators.
+
+```{python}
+#| label: tbl-summary
+#| tbl-cap: "Summary statistics for selected indicators."
+summary = df[["life_expectancy","gdp_per_capita","total_population","unemployment_rate","inflation_rate","income_inequality"]].agg(
+    ["count","mean","median","min","max"]
+).T
+summary
+```
+
+See @tbl-summary for the key statistics.
+
+## Conclusion
+
+In 2022, GDP per capita is positively associated with life expectancy (@fig-life-gdp).  
+Other indicators such as inequality and unemployment may also relate to health outcomes, although the strength and direction of these relationships vary across countries.

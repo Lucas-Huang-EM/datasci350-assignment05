@@ -1,0 +1,106 @@
+---
+title: "WDI 2022: Development and Health Patterns"
+author: "Lucas Huang"
+date: "2026-02-26"
+format:
+  revealjs:
+    theme: solarized
+    transition: slide
+    slide-number: true
+execute:
+  echo: false
+  warning: false
+  message: false
+bibliography: references.bib
+---
+
+## Title slide
+
+World Development Indicators (WDI), 2022  
+Key relationships among GDP per capita, life expectancy, and inequality.
+
+[@worldbank_wdi]
+
+---
+
+## Dataset & indicators
+
+We analyze 2022 WDI indicators for multiple countries:
+
+- GDP per capita (`gdp_per_capita`)
+- Life expectancy (`life_expectancy`)
+- Total population (`total_population`)
+- Income inequality (`income_inequality`)
+- Unemployment and inflation (context variables)
+
+---
+
+## Relationship: Life expectancy vs GDP per capita
+
+```{python}
+#| label: fig-life-gdp-slides
+#| fig-cap: "Life expectancy vs GDP per capita (log scale)."
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("wdi.csv")
+plot_df = df.dropna(subset=["life_expectancy", "gdp_per_capita"])
+
+plt.figure()
+plt.scatter(plot_df["gdp_per_capita"], plot_df["life_expectancy"])
+plt.xscale("log")
+plt.xlabel("GDP per capita (log scale)")
+plt.ylabel("Life expectancy (years)")
+plt.title("Life expectancy vs GDP per capita")
+plt.show()
+```
+
+This pattern resembles the classic Preston curve: gains in income predict larger improvements at lower income levels [@preston1975].
+
+---
+
+## Relationship: Inequality vs life expectancy
+
+```{python}
+#| label: fig-ineq-life-slides
+#| fig-cap: "Life expectancy vs income inequality."
+ineq_df = df.dropna(subset=["life_expectancy", "income_inequality"])
+
+plt.figure()
+plt.scatter(ineq_df["income_inequality"], ineq_df["life_expectancy"])
+plt.xlabel("Income inequality")
+plt.ylabel("Life expectancy (years)")
+plt.title("Life expectancy vs income inequality")
+plt.show()
+```
+
+Interpretation: briefly describe the direction/strength and any outliers you noticed.
+
+---
+
+## Summary table (key stats)
+
+```{python}
+#| label: tbl-summary-slides
+#| tbl-cap: "Summary statistics (rounded to two decimals)."
+summary = df[["life_expectancy",
+              "gdp_per_capita",
+              "total_population",
+              "unemployment_rate",
+              "inflation_rate",
+              "income_inequality"]].agg(
+    ["count","mean","median","min","max"]
+).T.round(2)
+
+summary
+```
+
+---
+
+## Conclusion
+
+- Higher GDP per capita is associated with higher life expectancy, with diminishing returns at high incomes.
+- Inequality may relate to health outcomes, but patterns vary by country.
+- Summary statistics provide context for typical ranges across countries.
+
+Data source: [@worldbank_wdi]
