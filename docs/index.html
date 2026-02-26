@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Lucas Huang">
+<meta name="dcterms.date" content="2026-02-26">
+
+<title>WDI Indicators (2022) — Exploratory Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="report_files/libs/clipboard/clipboard.min.js"></script>
+<script src="report_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="report_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="report_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="report_files/libs/quarto-html/popper.min.js"></script>
+<script src="report_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="report_files/libs/quarto-html/anchor.min.js"></script>
+<link href="report_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="report_files/libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="report_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="report_files/libs/bootstrap/bootstrap-d6a003b94517c951b2d65075d42fb01b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">1</span> Overview</a></li>
+  <li><a href="#load-data" id="toc-load-data" class="nav-link" data-scroll-target="#load-data"><span class="header-section-number">2</span> Load data</a></li>
+  <li><a href="#data-quality-checks" id="toc-data-quality-checks" class="nav-link" data-scroll-target="#data-quality-checks"><span class="header-section-number">3</span> Data quality checks</a></li>
+  <li><a href="#exploratory-data-analysis-3-indicators" id="toc-exploratory-data-analysis-3-indicators" class="nav-link" data-scroll-target="#exploratory-data-analysis-3-indicators"><span class="header-section-number">4</span> Exploratory data analysis (3+ indicators)</a>
+  <ul class="collapse">
+  <li><a href="#summary-statistics" id="toc-summary-statistics" class="nav-link" data-scroll-target="#summary-statistics"><span class="header-section-number">4.1</span> Summary statistics</a></li>
+  <li><a href="#correlations-numeric-indicators" id="toc-correlations-numeric-indicators" class="nav-link" data-scroll-target="#correlations-numeric-indicators"><span class="header-section-number">4.2</span> Correlations (numeric indicators)</a></li>
+  </ul></li>
+  <li><a href="#relationship-between-life-expectancy-and-gdp-per-capita" id="toc-relationship-between-life-expectancy-and-gdp-per-capita" class="nav-link" data-scroll-target="#relationship-between-life-expectancy-and-gdp-per-capita"><span class="header-section-number">5</span> Relationship between life expectancy and GDP per capita</a></li>
+  <li><a href="#inequality-and-life-expectancy" id="toc-inequality-and-life-expectancy" class="nav-link" data-scroll-target="#inequality-and-life-expectancy"><span class="header-section-number">6</span> Inequality and life expectancy</a></li>
+  <li><a href="#top-countries-by-life-expectancy" id="toc-top-countries-by-life-expectancy" class="nav-link" data-scroll-target="#top-countries-by-life-expectancy"><span class="header-section-number">7</span> Top countries by life expectancy</a></li>
+  <li><a href="#summary-table" id="toc-summary-table" class="nav-link" data-scroll-target="#summary-table"><span class="header-section-number">8</span> Summary table</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">9</span> Conclusion</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="report.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">WDI Indicators (2022) — Exploratory Analysis</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Lucas Huang </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 26, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="overview" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="overview"><span class="header-section-number">1</span> Overview</h2>
+<p>This report explores a subset of World Development Indicators (WDI) across countries in 2022.<br>
+We focus on the relationships among economic development (GDP per capita), health outcomes (life expectancy), and other social indicators such as unemployment, inflation, and inequality.</p>
+</section>
+<section id="load-data" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="load-data"><span class="header-section-number">2</span> Load data</h2>
+<div id="ae8d98ae" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display" data-execution_count="61">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">country</th>
+<th data-quarto-table-cell-role="th">inflation_rate</th>
+<th data-quarto-table-cell-role="th">exports_gdp_share</th>
+<th data-quarto-table-cell-role="th">gdp_growth_rate</th>
+<th data-quarto-table-cell-role="th">gdp_per_capita</th>
+<th data-quarto-table-cell-role="th">adult_literacy_rate</th>
+<th data-quarto-table-cell-role="th">primary_school_enrolment_rate</th>
+<th data-quarto-table-cell-role="th">education_expenditure_gdp_share</th>
+<th data-quarto-table-cell-role="th">measles_immunisation_rate</th>
+<th data-quarto-table-cell-role="th">health_expenditure_gdp_share</th>
+<th data-quarto-table-cell-role="th">income_inequality</th>
+<th data-quarto-table-cell-role="th">unemployment_rate</th>
+<th data-quarto-table-cell-role="th">life_expectancy</th>
+<th data-quarto-table-cell-role="th">total_population</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Afghanistan</td>
+<td>13.712102</td>
+<td>18.380042</td>
+<td>-6.240172</td>
+<td>357.261153</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>56.0</td>
+<td>23.088169</td>
+<td>NaN</td>
+<td>14.100</td>
+<td>65.617</td>
+<td>40578842.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Albania</td>
+<td>6.725203</td>
+<td>37.197076</td>
+<td>4.826801</td>
+<td>7756.961887</td>
+<td>NaN</td>
+<td>96.371230</td>
+<td>2.729770</td>
+<td>86.0</td>
+<td>7.536462</td>
+<td>NaN</td>
+<td>10.785</td>
+<td>78.769</td>
+<td>2451636.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Algeria</td>
+<td>9.265516</td>
+<td>30.791556</td>
+<td>3.600000</td>
+<td>4960.303343</td>
+<td>NaN</td>
+<td>105.747154</td>
+<td>4.749247</td>
+<td>79.0</td>
+<td>3.634643</td>
+<td>NaN</td>
+<td>12.382</td>
+<td>76.129</td>
+<td>45477389.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>American Samoa</td>
+<td>NaN</td>
+<td>46.957520</td>
+<td>1.735016</td>
+<td>18017.458938</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>72.752</td>
+<td>48342.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>Andorra</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>9.564612</td>
+<td>42414.047986</td>
+<td>NaN</td>
+<td>90.465681</td>
+<td>2.647280</td>
+<td>98.0</td>
+<td>7.521358</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>84.016</td>
+<td>79705.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="data-quality-checks" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="data-quality-checks"><span class="header-section-number">3</span> Data quality checks</h2>
+<p>We first check the dataset size, column types, and missingness.</p>
+<div id="d33d118b" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display" data-execution_count="62">
+<pre><code>(217, 14)</code></pre>
+</div>
+</div>
+<div id="deaeaaa5" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display" data-execution_count="63">
+<pre><code>country                                str
+inflation_rate                     float64
+exports_gdp_share                  float64
+gdp_growth_rate                    float64
+gdp_per_capita                     float64
+adult_literacy_rate                float64
+primary_school_enrolment_rate      float64
+education_expenditure_gdp_share    float64
+measles_immunisation_rate          float64
+health_expenditure_gdp_share       float64
+income_inequality                  float64
+unemployment_rate                  float64
+life_expectancy                    float64
+total_population                   float64
+dtype: object</code></pre>
+</div>
+</div>
+<div id="4709cf7e" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display" data-execution_count="64">
+<pre><code>adult_literacy_rate                0.792627
+income_inequality                  0.682028
+primary_school_enrolment_rate      0.253456
+education_expenditure_gdp_share    0.248848
+inflation_rate                     0.179724
+exports_gdp_share                  0.161290
+unemployment_rate                  0.142857
+health_expenditure_gdp_share       0.115207
+measles_immunisation_rate          0.110599
+gdp_growth_rate                    0.036866
+gdp_per_capita                     0.036866
+country                            0.000000
+life_expectancy                    0.000000
+total_population                   0.000000
+dtype: float64</code></pre>
+</div>
+</div>
+</section>
+<section id="exploratory-data-analysis-3-indicators" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="exploratory-data-analysis-3-indicators"><span class="header-section-number">4</span> Exploratory data analysis (3+ indicators)</h2>
+<p>In this section, we summarize key indicators and inspect distributions.</p>
+<section id="summary-statistics" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="summary-statistics"><span class="header-section-number">4.1</span> Summary statistics</h3>
+<div id="f0574cf8" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="65">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">life_expectancy</th>
+<th data-quarto-table-cell-role="th">gdp_per_capita</th>
+<th data-quarto-table-cell-role="th">total_population</th>
+<th data-quarto-table-cell-role="th">unemployment_rate</th>
+<th data-quarto-table-cell-role="th">inflation_rate</th>
+<th data-quarto-table-cell-role="th">income_inequality</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">count</th>
+<td>217.000000</td>
+<td>209.000000</td>
+<td>2.170000e+02</td>
+<td>186.000000</td>
+<td>178.000000</td>
+<td>69.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">mean</th>
+<td>73.108020</td>
+<td>21142.747417</td>
+<td>3.671133e+07</td>
+<td>7.196930</td>
+<td>12.645329</td>
+<td>35.201449</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">std</th>
+<td>7.942539</td>
+<td>31040.300784</td>
+<td>1.415279e+08</td>
+<td>5.845956</td>
+<td>19.752353</td>
+<td>6.883986</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">min</th>
+<td>18.818000</td>
+<td>302.992505</td>
+<td>9.992000e+03</td>
+<td>0.130000</td>
+<td>-6.687321</td>
+<td>24.100000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">25%</th>
+<td>67.788000</td>
+<td>2899.160475</td>
+<td>8.216370e+05</td>
+<td>3.484750</td>
+<td>5.361652</td>
+<td>30.900000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">50%</th>
+<td>74.160976</td>
+<td>7655.594210</td>
+<td>6.664449e+06</td>
+<td>5.337000</td>
+<td>7.985187</td>
+<td>33.900000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">75%</th>
+<td>78.531000</td>
+<td>28360.304147</td>
+<td>2.601872e+07</td>
+<td>9.194500</td>
+<td>12.259876</td>
+<td>38.800000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">max</th>
+<td>85.746000</td>
+<td>226052.001905</td>
+<td>1.425423e+09</td>
+<td>36.472000</td>
+<td>171.205491</td>
+<td>54.800000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="correlations-numeric-indicators" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="correlations-numeric-indicators"><span class="header-section-number">4.2</span> Correlations (numeric indicators)</h3>
+<div id="8b720c30" class="cell" data-execution_count="6">
+<div class="cell-output cell-output-display" data-execution_count="66">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">life_expectancy</th>
+<th data-quarto-table-cell-role="th">gdp_per_capita</th>
+<th data-quarto-table-cell-role="th">total_population</th>
+<th data-quarto-table-cell-role="th">unemployment_rate</th>
+<th data-quarto-table-cell-role="th">inflation_rate</th>
+<th data-quarto-table-cell-role="th">income_inequality</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">life_expectancy</th>
+<td>1.000000</td>
+<td>0.570982</td>
+<td>-0.005244</td>
+<td>-0.115117</td>
+<td>-0.056786</td>
+<td>-0.249699</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">gdp_per_capita</th>
+<td>0.570982</td>
+<td>1.000000</td>
+<td>-0.070115</td>
+<td>-0.200769</td>
+<td>-0.163516</td>
+<td>-0.263553</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">total_population</th>
+<td>-0.005244</td>
+<td>-0.070115</td>
+<td>1.000000</td>
+<td>-0.081104</td>
+<td>-0.027161</td>
+<td>-0.045055</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">unemployment_rate</th>
+<td>-0.115117</td>
+<td>-0.200769</td>
+<td>-0.081104</td>
+<td>1.000000</td>
+<td>0.059381</td>
+<td>0.154770</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">inflation_rate</th>
+<td>-0.056786</td>
+<td>-0.163516</td>
+<td>-0.027161</td>
+<td>0.059381</td>
+<td>1.000000</td>
+<td>0.068290</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">income_inequality</th>
+<td>-0.249699</td>
+<td>-0.263553</td>
+<td>-0.045055</td>
+<td>0.154770</td>
+<td>0.068290</td>
+<td>1.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="relationship-between-life-expectancy-and-gdp-per-capita" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="relationship-between-life-expectancy-and-gdp-per-capita"><span class="header-section-number">5</span> Relationship between life expectancy and GDP per capita</h2>
+<p>We expect countries with higher GDP per capita to generally have higher life expectancy, though the relationship may flatten at high income levels.</p>
+<div id="cell-fig-life-gdp" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-display">
+<div id="fig-life-gdp" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-life-gdp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="report_files/figure-html/fig-life-gdp-output-1.png" width="585" height="451" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-life-gdp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Life expectancy vs GDP per capita (log scale).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>As shown in <a href="#fig-life-gdp" class="quarto-xref">Figure&nbsp;1</a>, life expectancy tends to increase as GDP per capita increases. The income–life expectancy pattern is consistent with the classic “Preston curve” relationship <span class="citation" data-cites="preston1975">(<a href="#ref-preston1975" role="doc-biblioref">Preston 1975</a>)</span>.</p>
+</section>
+<section id="inequality-and-life-expectancy" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="inequality-and-life-expectancy"><span class="header-section-number">6</span> Inequality and life expectancy</h2>
+<p>Next we examine whether countries with higher income inequality tend to have lower life expectancy.</p>
+<div id="cell-fig-ineq-life" class="cell" data-execution_count="8">
+<div class="cell-output cell-output-display">
+<div id="fig-ineq-life" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ineq-life-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="report_files/figure-html/fig-ineq-life-output-1.png" width="585" height="449" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ineq-life-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Life expectancy vs income inequality.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure <a href="#fig-ineq-life" class="quarto-xref">Figure&nbsp;2</a> suggests that there isn’t a significant association between life expectancy and income inequality. It may be slightly negative but more tests are needed and may not be significant.</p>
+</section>
+<section id="top-countries-by-life-expectancy" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="top-countries-by-life-expectancy"><span class="header-section-number">7</span> Top countries by life expectancy</h2>
+<div id="cell-fig-top-life" class="cell" data-execution_count="9">
+<div class="cell-output cell-output-display">
+<div id="fig-top-life" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-top-life-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="report_files/figure-html/fig-top-life-output-1.png" width="700" height="449" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-top-life-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Top 15 countries by life expectancy.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure <a href="#fig-top-life" class="quarto-xref">Figure&nbsp;3</a> highlights the highest life expectancy values in the dataset. The top 15 are all above 80 and with countries distributed from Asia, Europe, Oceania, and small island nations.</p>
+</section>
+<section id="summary-table" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="summary-table"><span class="header-section-number">8</span> Summary table</h2>
+<p>We summarize central tendencies and ranges for selected indicators.</p>
+<div class="cell" data-execution_count="10">
+<div id="tbl-summary" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="10">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Summary statistics for selected indicators.
+</figcaption>
+<div aria-describedby="tbl-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="70">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">count</th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">median</th>
+<th data-quarto-table-cell-role="th">min</th>
+<th data-quarto-table-cell-role="th">max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">life_expectancy</th>
+<td>217.0</td>
+<td>7.310802e+01</td>
+<td>7.416098e+01</td>
+<td>18.818000</td>
+<td>8.574600e+01</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">gdp_per_capita</th>
+<td>209.0</td>
+<td>2.114275e+04</td>
+<td>7.655594e+03</td>
+<td>302.992505</td>
+<td>2.260520e+05</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">total_population</th>
+<td>217.0</td>
+<td>3.671133e+07</td>
+<td>6.664449e+06</td>
+<td>9992.000000</td>
+<td>1.425423e+09</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">unemployment_rate</th>
+<td>186.0</td>
+<td>7.196930e+00</td>
+<td>5.337000e+00</td>
+<td>0.130000</td>
+<td>3.647200e+01</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">inflation_rate</th>
+<td>178.0</td>
+<td>1.264533e+01</td>
+<td>7.985187e+00</td>
+<td>-6.687321</td>
+<td>1.712055e+02</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">income_inequality</th>
+<td>69.0</td>
+<td>3.520145e+01</td>
+<td>3.390000e+01</td>
+<td>24.100000</td>
+<td>5.480000e+01</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>See <a href="#tbl-summary" class="quarto-xref">Table&nbsp;1</a> for the key statistics.</p>
+</section>
+<section id="conclusion" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">9</span> Conclusion</h2>
+<p>In 2022, GDP per capita is positively associated with life expectancy (<a href="#fig-life-gdp" class="quarto-xref">Figure&nbsp;1</a>).<br>
+Other indicators such as inequality and unemployment may also relate to health outcomes, although the strength and direction of these relationships vary across countries. The indicators in this report come from the World Development Indicators database <span class="citation" data-cites="worldbank_wdi">(<a href="#ref-worldbank_wdi" role="doc-biblioref">World Bank 2026</a>)</span>.</p>
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-preston1975" class="csl-entry" role="listitem">
+Preston, Samuel H. 1975. <span>“The Changing Relation Between Mortality and Level of Economic Development.”</span> <em>Population Studies</em> 29 (2): 231–48.
+</div>
+<div id="ref-worldbank_wdi" class="csl-entry" role="listitem">
+World Bank. 2026. <span>“World Development Indicators.”</span> World Bank Open Data.
+</div>
+</div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
